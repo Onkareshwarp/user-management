@@ -2,32 +2,33 @@ name: Auth Service CI
 
 on:
   push:
-    paths:
-      - 'auth_service/**'
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: auth_service
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18.x
 
       - name: Install dependencies
         run: npm install
+        working-directory: auth_service
 
-      - name: Run Linter
+      - name: Run lint
         run: npm run lint
+        working-directory: auth_service
 
-      - name: Run Tests
+      - name: Run tests
         run: npm test
+        working-directory: auth_service
