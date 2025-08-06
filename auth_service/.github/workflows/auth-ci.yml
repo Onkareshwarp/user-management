@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: auth_service # 👈 This is important
 
     steps:
       - name: Checkout code
@@ -23,12 +26,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: auth_service
 
       - name: Run lint
         run: npm run lint
-        working-directory: auth_service
 
       - name: Run tests
         run: npm test
-        working-directory: auth_service
