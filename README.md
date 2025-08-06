@@ -1,46 +1,50 @@
-# User Management System (NestJS)
+# 🛠️ User Management System (Microservices Architecture)
 
-### Features
+This project is a **User Management System** built using a microservices architecture with **Node.js**, **NestJS**, and **PostgreSQL**. It includes features like authentication, user profiles, role-based access control (RBAC), and notifications.
 
-- User registration and login with JWT
-- Role-based access control (Admin, User)
-- Profile management (get, update, delete)
-- Protected routes with NestJS Guards
-- Error handling and input validation
-- Swagger API docs
+## 📦 Monorepo Structure
 
-### Architecture
+user-management/
+├── auth_service/ # Handles user registration, login, JWT
+├── user_service/ # Manages user profiles, updates
+├── notification_service/ # Sends notifications (email, etc.)
+├── gateway_api/ # API gateway (optional)
+└── shared/ # Shared interfaces, DTOs, utilities
+## 🚀 Tech Stack
 
-- Framework: NestJS (modular, scalable)
-- DB: PostgreSQL
-- ORM: Prisma
-- Auth: JWT (with access token)
-- Role Guard: Custom decorators + guards
-- Structure:
-  - auth/
-  - user/
-  - common/
-  - prisma/
+- Node.js
+- NestJS (per service)
+- PostgreSQL (via Prisma ORM)
+- RabbitMQ (microservice communication)
+- Docker (service containers)
+- GitHub Actions (CI/CD)
 
-### API Endpoints
+## 📁 Each Microservice Includes:
 
-POST /auth/signup  
-POST /auth/login  
-GET /users/me  
-PATCH /users/update  
-DELETE /users/delete  
-GET /users/all (Admin only)
+- REST APIs (NestJS)
+- Prisma + PostgreSQL
+- Environment-based config
+- Logging and error handling
+- Unit + integration testing (Jest)
+- Docker support
 
-### Database Models
+## 🔐 Auth Flow
 
-User:
+- ✅ JWT-based login & registration
+- ✅ Password hashing (bcrypt)
+- ✅ Role-based access using guards
+- ✅ Inter-service auth via RabbitMQ events
 
-- id (UUID)
-- email
-- password
-- name
-- role (enum: admin/user)
-- createdAt
-- updatedAt
+## 📦 Installation (for development)
 
-Role: (optional — could just use enum for now)
+```bash
+# Clone repo
+git clone https://github.com/<your-username>/user-management.git
+cd user-management
+
+# Install dependencies for each service
+cd auth_service
+npm install
+cd ../user_service
+npm install
+# Repeat for other services
