@@ -1,0 +1,35 @@
+# .github/workflows/auth-ci.yml
+name: CI - Auth Service
+
+on:
+  push:
+    paths:
+      - "auth_services/**"
+  pull_request:
+    paths:
+      - "auth_services/**"
+
+jobs:
+  build-and-test-auth:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./auth_services
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Lint (Optional)
+        run: npm run lint
+
+      - name: Run Tests (Optional)
+        run: npm test

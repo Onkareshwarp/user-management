@@ -1,0 +1,35 @@
+# .github/workflows/user-ci.yml
+name: CI - User Service
+
+on:
+  push:
+    paths:
+      - "user_services/**"
+  pull_request:
+    paths:
+      - "user_services/**"
+
+jobs:
+  build-and-test-user:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./user_services
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Lint (Optional)
+        run: npm run lint
+
+      - name: Run Tests (Optional)
+        run: npm test
