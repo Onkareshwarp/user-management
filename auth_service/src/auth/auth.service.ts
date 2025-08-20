@@ -1,4 +1,10 @@
-import { Injectable, ConflictException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  Inject,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { User } from '@prisma/client';
 import { ClientProxy } from '@nestjs/microservices';
@@ -10,6 +16,8 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name); // <-- Move here
+
   constructor(
     private readonly prisma: PrismaService,
     private jwtService: JwtService,
@@ -64,5 +72,27 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     return { accessToken };
+  }
+
+  async deleteUser(userId: string) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+      });
+      if (!user) {
+        this.logger.log(
+          `User deletion failed - User not found with ID: ${userId}`,
+        );
+      }
+      const deletedUser = await this.prisma.user.delete({
+        where: { id: userId },
+      });
+      this.logger.log(
+        `Deleting auth credentials for user: ${deletedUser?.email}`,
+      );
+    } catch (error) {
+      this.logger.error(`User deletion failed: ${error.message}`);
+      throw new InternalServerErrorException('User deletion failed');
+    }
   }
 }

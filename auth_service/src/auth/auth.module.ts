@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { RabbitMQConfig } from '../config/rabbitmq.config';
 import { JwtModule } from '@nestjs/jwt';
-
+import { JwtStrategy } from './strategy/jwt.strategy';
 @Module({
   imports: [
     PrismaModule,
@@ -16,7 +16,9 @@ import { JwtModule } from '@nestjs/jwt';
         options: {
           urls: [RabbitMQConfig.url],
           queue: RabbitMQConfig.userQueue,
-          queueOptions: { durable: false },
+          queueOptions: {
+            durable: false,
+          },
         },
       },
     ]),
@@ -26,6 +28,6 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

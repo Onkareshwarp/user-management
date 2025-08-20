@@ -5,8 +5,9 @@ import {
   Post,
   UseGuards,
   Request,
-  Req,
 } from '@nestjs/common';
+import { EventPattern, Payload } from '@nestjs/microservices';
+
 import { AuthService } from './auth.service';
 import { createUserDto } from './dtos/create.user.dto';
 import { loginDtos } from './dtos/login.user.dtos';
@@ -34,6 +35,13 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getProfile(@Request() req) {
+    console.log('It has enter in auth controller');
     return req.user;
+  }
+
+  @EventPattern('user_deleted')
+  async handleUserDeleted(@Payload() data: { id: string }) {
+    console.log('User deleted event received:', data);
+    await this.authService.deleteUser(data.id);
   }
 }
